@@ -10,8 +10,14 @@ export default function Register() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState(false);
   const [errorText, setErrorText] = useState("");
+  const [buttonText, setButtonText] = useState(true);
+
   const handleSubmit = async (e: any) => {
     e.preventDefault();
+
+    setError(false);
+    setErrorText("");
+    setButtonText(false);
 
     const validateEmail = (email: string) =>
       /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
@@ -57,7 +63,7 @@ export default function Register() {
 
     setError(false);
     setErrorText("");
-
+    setButtonText(true);
     try {
       const result = await fetch("/api/auth/register", {
         method: "POST",
@@ -70,6 +76,13 @@ export default function Register() {
           password,
         }),
       });
+
+      if (!result.ok) {
+        const errorData = await result.json();
+        setError(true);
+        setErrorText(errorData.message);
+        return;
+      }
 
       const data = await result.json();
       console.log(data);
@@ -149,7 +162,7 @@ export default function Register() {
               </div>
             </div>
             {error && (
-              <div className="text-xs text-red-500 leading-relaxed pt-2">
+              <div className="text-xm text-red-500 leading-relaxed pt-2">
                 {errorText}
               </div>
             )}
@@ -169,7 +182,7 @@ export default function Register() {
               type="submit"
               className="w-full flex items-center justify-center gap-2 py-3 px-4 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-full text-sm transition-colors shadow-sm mt-4"
             >
-              Create Account
+              {buttonText ? "Create Account" : "Loading..."}
               <ArrowRight className="w-4 h-4" />
             </button>
           </form>
