@@ -1,3 +1,5 @@
+"use client";
+
 import Link from "next/link";
 import {
   ArrowLeft,
@@ -9,17 +11,47 @@ import {
   Pencil,
   Trash2,
 } from "lucide-react";
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import { Application } from "@/type/page";
 
-export default function ApplicationDetails() {
-  const application = {
-    company: "Google",
-    position: "Software Engineer",
-    location: "Addis Ababa",
-    appliedDate: "August 28, 2026",
-    status: "Interview",
-    notes:
-      "Completed the initial application and received an invitation for a technical interview.",
-  };
+export default function ApplicationDetails({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
+  const router = useRouter();
+
+  const [application, setApplication] = useState<any>([]);
+
+  useEffect(() => {
+    const getApplication = async () => {
+      const { id } = await params;
+
+      const result = await fetch(`/api/applications/${id}`);
+
+      if (result.status === 401) {
+        router.push("/auth/login");
+        return;
+      }
+
+      const data = await result.json();
+
+      setApplication(data);
+    };
+
+    getApplication();
+  }, [router]);
+
+  // const application = {
+  //   company: "Google",
+  //   position: "Software Engineer",
+  //   location: "Addis Ababa",
+  //   appliedDate: "August 28, 2026",
+  //   status: "Interview",
+  //   notes:
+  //     "Completed the initial application and received an invitation for a technical interview.",
+  // };
 
   return (
     <main className="min-h-screen bg-slate-50">
@@ -40,7 +72,7 @@ export default function ApplicationDetails() {
 
             <div>
               <h1 className="text-2xl font-bold text-slate-900">
-                {application.position}
+                {application.jobTitle}
               </h1>
 
               <p className="mt-1 text-sm font-medium text-slate-600">
@@ -78,7 +110,7 @@ export default function ApplicationDetails() {
               </div>
 
               <p className="mt-2 text-sm font-medium text-slate-800">
-                {application.position}
+                {application.jobTitle}
               </p>
             </div>
 
