@@ -1,3 +1,5 @@
+"use client";
+
 import Link from "next/link";
 import {
   Search,
@@ -9,50 +11,34 @@ import {
   Trash2,
 } from "lucide-react";
 
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+
 export default function ApplicationsPage() {
-  const applications = [
-    {
-      id: 1,
-      company: "Google",
-      position: "Software Engineer",
-      location: "Addis Ababa",
-      appliedDate: "August 28, 2026",
-      status: "Interview",
-      statusColor: "bg-indigo-50 text-indigo-600 border-indigo-200",
-    },
-    {
-      id: 2,
-      company: "Microsoft",
-      position: "Frontend Developer",
-      location: "Remote",
-      appliedDate: "August 24, 2026",
-      status: "Applied",
-      statusColor: "bg-blue-50 text-blue-600 border-blue-200",
-    },
-    {
-      id: 3,
-      company: "Ethiopian Airlines",
-      position: "Full-Stack Developer",
-      location: "Addis Ababa",
-      appliedDate: "August 20, 2026",
-      status: "Rejected",
-      statusColor: "bg-rose-50 text-rose-600 border-rose-200",
-    },
-    {
-      id: 4,
-      company: "Safaricom",
-      position: "Backend Developer",
-      location: "Addis Ababa",
-      appliedDate: "August 15, 2026",
-      status: "Offer",
-      statusColor: "bg-emerald-50 text-emerald-600 border-emerald-200",
-    },
-  ];
+  const router = useRouter();
+
+  const [applications, setApplications] = useState<any[]>([]);
+
+  useEffect(() => {
+    const getApplications = async () => {
+      const result = await fetch("/api/applications");
+
+      if (result.status === 401) {
+        router.push("/auth/login");
+        return;
+      }
+
+      const data = await result.json();
+
+      setApplications(data);
+    };
+
+    getApplications();
+  }, [router]);
 
   return (
     <main className="min-h-screen bg-slate-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
-        {/* Header */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
             <h1 className="text-2xl font-bold text-slate-900">
@@ -72,7 +58,6 @@ export default function ApplicationsPage() {
           </Link>
         </div>
 
-        {/* Search and Filter */}
         <div className="mt-8 bg-white p-3 rounded-2xl border border-slate-200 shadow-sm">
           <div className="flex flex-col md:flex-row gap-3">
             <div className="flex-1 flex items-center gap-3 px-4">
@@ -96,7 +81,6 @@ export default function ApplicationsPage() {
           </div>
         </div>
 
-        {/* Applications List */}
         <section className="mt-8">
           <div className="flex items-center justify-between mb-4">
             <div>
@@ -117,7 +101,6 @@ export default function ApplicationsPage() {
                 className="bg-white border border-slate-100 rounded-2xl p-6 shadow-sm hover:shadow-md transition-shadow"
               >
                 <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-5">
-                  {/* Application Information */}
                   <div className="flex gap-4">
                     <div className="w-12 h-12 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center shrink-0">
                       <BriefcaseBusiness className="w-6 h-6" />
@@ -125,7 +108,7 @@ export default function ApplicationsPage() {
 
                     <div>
                       <h3 className="text-lg font-bold text-slate-900">
-                        {application.position}
+                        {application.jobTitle}
                       </h3>
 
                       <p className="text-sm font-medium text-slate-600 mt-1">
@@ -146,14 +129,10 @@ export default function ApplicationsPage() {
                     </div>
                   </div>
 
-                  {/* Status */}
-                  <span
-                    className={`w-fit px-3 py-1.5 rounded-full border text-xs font-semibold ${application.statusColor}`}
-                  >
+                  <span className="w-fit px-3 py-1.5 rounded-full border text-xs font-semibold">
                     {application.status}
                   </span>
 
-                  {/* Actions */}
                   <div className="flex items-center gap-2">
                     <Link
                       href={`/applications/${application.id}`}

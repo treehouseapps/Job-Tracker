@@ -12,7 +12,6 @@ export default function NewApplicationPage() {
   return (
     <main className="min-h-screen bg-slate-50">
       <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
-        {/* Back */}
         <Link
           href="/applications"
           className="inline-flex items-center gap-2 text-sm font-medium text-slate-500 hover:text-indigo-600 transition-colors"
@@ -21,7 +20,6 @@ export default function NewApplicationPage() {
           Back to Applications
         </Link>
 
-        {/* Header */}
         <div className="mt-6">
           <h1 className="text-2xl font-bold text-slate-900">Add Application</h1>
 
@@ -30,10 +28,8 @@ export default function NewApplicationPage() {
           </p>
         </div>
 
-        {/* Form */}
         <div className="mt-8 bg-white border border-slate-100 rounded-2xl p-6 sm:p-8 shadow-sm">
           <form className="space-y-5">
-            {/* Company */}
             <div>
               <label className="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-2">
                 Company
@@ -51,7 +47,6 @@ export default function NewApplicationPage() {
               </div>
             </div>
 
-            {/* Position */}
             <div>
               <label className="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-2">
                 Position
@@ -69,7 +64,6 @@ export default function NewApplicationPage() {
               </div>
             </div>
 
-            {/* Location */}
             <div>
               <label className="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-2">
                 Location
@@ -86,7 +80,6 @@ export default function NewApplicationPage() {
               </div>
             </div>
 
-            {/* Applied Date */}
             <div>
               <label className="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-2">
                 Applied Date
@@ -103,7 +96,6 @@ export default function NewApplicationPage() {
               </div>
             </div>
 
-            {/* Status */}
             <div>
               <label className="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-2">
                 Status
@@ -121,7 +113,6 @@ export default function NewApplicationPage() {
               </select>
             </div>
 
-            {/* Notes */}
             <div>
               <label className="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-2">
                 Notes
@@ -138,7 +129,6 @@ export default function NewApplicationPage() {
               </div>
             </div>
 
-            {/* Buttons */}
             <div className="pt-4 flex flex-col sm:flex-row justify-end gap-3">
               <Link
                 href="/applications"
