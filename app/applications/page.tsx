@@ -13,11 +13,12 @@ import {
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { Application } from "@/type/page";
 
 export default function ApplicationsPage() {
   const router = useRouter();
 
-  const [applications, setApplications] = useState<any[]>([]);
+  const [applications, setApplications] = useState<Application[]>([]);
 
   useEffect(() => {
     const getApplications = async () => {
