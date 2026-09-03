@@ -1,3 +1,4 @@
+import { getCurrentUser } from "@/lib/auth";
 import prisma from "@/lib/prisma";
 
 type Params = {
@@ -8,8 +9,20 @@ export async function GET(request: Request, { params }: Params) {
   try {
     const { id } = await params;
 
-    const application = await prisma.application.findUnique({
-      where: { id },
+    const user = await getCurrentUser();
+
+    if (!user) {
+      return Response.json(
+        { message: "Unauthorized Account" },
+        { status: 401 },
+      );
+    }
+
+    const application = await prisma.application.findFirst({
+      where: {
+        id,
+        userId: user.userId as string,
+      },
     });
 
     if (!application) {
@@ -33,10 +46,36 @@ export async function GET(request: Request, { params }: Params) {
 export async function PUT(request: Request, { params }: Params) {
   try {
     const { id } = await params;
+
+    const user = await getCurrentUser();
+
+    if (!user) {
+      return Response.json(
+        { message: "Unauthorized Account" },
+        { status: 401 },
+      );
+    }
+
     const data = await request.json();
 
+    const check = await prisma.application.findFirst({
+      where: {
+        id,
+        userId: user.userId as string,
+      },
+    });
+
+    if (!check) {
+      return Response.json(
+        { message: "Application not found" },
+        { status: 404 },
+      );
+    }
+
     const application = await prisma.application.update({
-      where: { id },
+      where: {
+        id,
+      },
       data: {
         company: data.company,
         jobTitle: data.jobTitle,
@@ -62,6 +101,29 @@ export async function PUT(request: Request, { params }: Params) {
 export async function DELETE(request: Request, { params }: Params) {
   try {
     const { id } = await params;
+
+    const user = await getCurrentUser();
+
+    if (!user) {
+      return Response.json(
+        { message: "Unauthorized Account" },
+        { status: 401 },
+      );
+    }
+
+    const check = await prisma.application.findFirst({
+      where: {
+        id,
+        userId: user.userId as string,
+      },
+    });
+
+    if (!check) {
+      return Response.json(
+        { message: "Application not found" },
+        { status: 404 },
+      );
+    }
 
     await prisma.application.delete({
       where: { id },
