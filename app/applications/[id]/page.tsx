@@ -169,7 +169,10 @@ export default function ApplicationDetails({
             Delete
           </button>
 
-          <button className="inline-flex items-center justify-center gap-2 px-5 py-2.5 text-sm font-semibold text-white bg-indigo-600 hover:bg-indigo-700 rounded-full transition-colors">
+          <button
+            className="inline-flex items-center justify-center gap-2 px-5 py-2.5 text-sm font-semibold text-white bg-indigo-600 hover:bg-indigo-700 rounded-full transition-colors"
+            onClick={() => router.push(`/applications/${application.id}/edit`)}
+          >
             <Pencil className="w-4 h-4" />
             Edit Application
           </button>
