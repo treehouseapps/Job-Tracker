@@ -20,6 +20,25 @@ export default function ChangePasswordPage() {
       return;
     }
 
+    const validatePassword = (password: string) => {
+      const validations = {
+        length: password.length >= 6,
+        upper: /[A-Z]/.test(password),
+        lower: /[a-z]/.test(password),
+        number: /[0-9]/.test(password),
+        symbol: /[^A-Za-z0-9]/.test(password),
+      };
+      const isValid = Object.values(validations).every(Boolean);
+      return { ...validations, isValid };
+    };
+
+    const passwordValidation = validatePassword(newPassword);
+    if (!passwordValidation.isValid) {
+      setError(
+        "Password must be at least 6 characters long and include uppercase, lowercase, number, and symbol.",
+      );
+      return;
+    }
     setSaving(true);
     setError("");
 
