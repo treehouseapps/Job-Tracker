@@ -3,7 +3,6 @@
 import Link from "next/link";
 import { Mail, Lock, ArrowRight, Router } from "lucide-react";
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -12,7 +11,6 @@ export default function Login() {
   const [errorText, setErrorText] = useState("");
   const [buttonText, setButtonText] = useState(true);
 
-  const router = useRouter();
   const handleSubmit = async (e: any) => {
     e.preventDefault();
 
@@ -74,8 +72,7 @@ export default function Login() {
       }
 
       const data = await result.json();
-      console.log(data);
-      router.push("/dashboard");
+      window.location.href = "/dashboard";
     } catch (error) {
       console.error("Error during registration:", error);
     }

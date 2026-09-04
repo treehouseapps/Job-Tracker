@@ -86,6 +86,8 @@ export default function Register() {
 
       const data = await result.json();
       console.log(data);
+
+      window.location.href = "/dashboard";
     } catch (error) {
       console.error("Error during registration:", error);
     }

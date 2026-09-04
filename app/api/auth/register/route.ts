@@ -1,5 +1,7 @@
 import prisma from "@/lib/prisma";
 import bcrypt from "bcryptjs";
+import { signJwt } from "@/lib/auth";
+import { NextResponse } from "next/server";
 
 export async function POST(request: Request) {
   try {
@@ -30,7 +32,9 @@ export async function POST(request: Request) {
       },
     });
 
-    return Response.json(
+    const token = await signJwt(user.id);
+
+    const response = NextResponse.json(
       {
         message: "Account created successfully",
         user: {
@@ -41,6 +45,22 @@ export async function POST(request: Request) {
       },
       { status: 201 },
     );
+
+    response.cookies.set("token", token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      maxAge: 60 * 60 * 24 * 7,
+      path: "/",
+    });
+
+    response.cookies.set("token", token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      maxAge: 60 * 60 * 24 * 7,
+      path: "/",
+    });
+
+    return response;
   } catch (error) {
     console.error(error);
 
