@@ -2,8 +2,8 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { getCurrentUser } from "@/lib/auth";
 import { useRouter } from "next/navigation";
+import { User } from "lucide-react";
 
 export default function Navbar() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -66,6 +66,11 @@ export default function Navbar() {
         </nav>
         {isLoggedIn ? (
           <div className="flex items-center gap-3">
+            <Link href="/profile">
+              <div className="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center">
+                <User className="w-5 h-5 text-slate-500" />
+              </div>
+            </Link>
             <button
               onClick={handleLogout}
               className="px-4 py-2 text-sm font-medium bg-slate-100 rounded-full hover:bg-slate-200 transition-colors"
