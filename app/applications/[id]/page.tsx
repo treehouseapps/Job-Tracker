@@ -22,7 +22,7 @@ export default function ApplicationDetails({
 }) {
   const router = useRouter();
 
-  const [application, setApplication] = useState<any>([]);
+  const [application, setApplication] = useState<Application | null>(null);
 
   useEffect(() => {
     const getApplication = async () => {
@@ -43,6 +43,26 @@ export default function ApplicationDetails({
     getApplication();
   }, [router]);
 
+  const handleDelete = async () => {
+    if (!confirm("Are you sure you want to delete this application?")) {
+      return;
+    }
+    const { id } = await params;
+    const result = await fetch(`/api/applications/${id}`, {
+      method: "DELETE",
+    });
+
+    if (result.status === 401) {
+      router.push("/auth/login");
+      return;
+    }
+
+    router.push("/applications");
+  };
+
+  if (!application) {
+    return <div>Loading...</div>;
+  }
   return (
     <main className="min-h-screen bg-slate-50">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
@@ -141,7 +161,10 @@ export default function ApplicationDetails({
         </section>
 
         <div className="mt-6 flex flex-col sm:flex-row justify-end gap-3">
-          <button className="inline-flex items-center justify-center gap-2 px-5 py-2.5 text-sm font-semibold text-rose-600 bg-rose-50 hover:bg-rose-100 rounded-full transition-colors">
+          <button
+            className="inline-flex items-center justify-center gap-2 px-5 py-2.5 text-sm font-semibold text-rose-600 bg-rose-50 hover:bg-rose-100 rounded-full transition-colors"
+            onClick={handleDelete}
+          >
             <Trash2 className="w-4 h-4" />
             Delete
           </button>

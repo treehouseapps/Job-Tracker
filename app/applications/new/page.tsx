@@ -16,12 +16,12 @@ import { useRouter } from "next/navigation";
 export default function NewApplicationPage() {
   const router = useRouter();
 
-  const [company, setCompany] = useState("");
-  const [jobTitle, setJobTitle] = useState("");
-  const [location, setLocation] = useState("");
-  const [appliedDate, setAppliedDate] = useState("");
+  const [company, setCompany] = useState("Demo Company");
+  const [jobTitle, setJobTitle] = useState("Demo Job Title");
+  const [location, setLocation] = useState("Demo Location");
+  const [appliedDate, setAppliedDate] = useState("2023-01-01");
   const [status, setStatus] = useState("Applied");
-  const [notes, setNotes] = useState("");
+  const [notes, setNotes] = useState("Demo Notes");
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e: any) => {

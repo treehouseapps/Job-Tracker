@@ -137,21 +137,10 @@ export default function ApplicationsPage() {
                   <div className="flex items-center gap-2">
                     <Link
                       href={`/applications/${application.id}`}
-                      className="px-4 py-2 text-xs font-semibold text-slate-600 bg-slate-100 hover:bg-slate-200 rounded-full transition-colors"
+                      className="px-4 py-2 text-xm font-semibold text-slate-600 bg-slate-300 hover:bg-slate-200 rounded transition-colors"
                     >
                       View
                     </Link>
-
-                    <Link
-                      href={`/applications/${application.id}/edit`}
-                      className="p-2 text-slate-400 hover:text-indigo-600 transition-colors"
-                    >
-                      <Pencil className="w-4 h-4" />
-                    </Link>
-
-                    <button className="p-2 text-slate-400 hover:text-rose-600 transition-colors">
-                      <Trash2 className="w-4 h-4" />
-                    </button>
                   </div>
                 </div>
               </div>
