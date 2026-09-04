@@ -1,3 +1,5 @@
+"use client";
+
 import Link from "next/link";
 import {
   BriefcaseBusiness,
@@ -8,71 +10,80 @@ import {
   ArrowRight,
   Plus,
 } from "lucide-react";
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import { Application } from "@/type/page";
 
 export default function Dashboard() {
+  const router = useRouter();
+
+  const [applications, setApplications] = useState<Application[]>([]);
+
+  useEffect(() => {
+    const getApplications = async () => {
+      const result = await fetch("/api/applications");
+
+      if (result.status === 401) {
+        router.push("/auth/login");
+        return;
+      }
+
+      const data = await result.json();
+
+      setApplications(data);
+    };
+
+    getApplications();
+  }, [router]);
+
+  const totalApplications = applications.length;
+
+  const interviews = applications.filter(
+    (application) => application.status === "Interview",
+  ).length;
+
+  const offers = applications.filter(
+    (application) => application.status === "Offer",
+  ).length;
+
+  const rejected = applications.filter(
+    (application) => application.status === "Rejected",
+  ).length;
+
+  const applied = applications.filter(
+    (application) => application.status === "Applied",
+  ).length;
+
+  const recentApplications = applications.slice(0, 4);
+
   const stats = [
     {
       title: "Total Applications",
-      value: "12",
+      value: totalApplications,
       description: "All applications",
       icon: BriefcaseBusiness,
       iconStyle: "bg-indigo-50 text-indigo-600",
     },
     {
       title: "Interviews",
-      value: "3",
+      value: interviews,
       description: "In progress",
       icon: CalendarDays,
       iconStyle: "bg-amber-50 text-amber-600",
     },
     {
       title: "Offers",
-      value: "1",
+      value: offers,
       description: "Received",
       icon: CheckCircle2,
       iconStyle: "bg-emerald-50 text-emerald-600",
     },
     {
       title: "Rejected",
-      value: "2",
+      value: rejected,
       description: "Final decisions",
       icon: XCircle,
       iconStyle: "bg-rose-50 text-rose-600",
-    },
-  ];
-
-  const recentApplications = [
-    {
-      id: 1,
-      company: "Google",
-      position: "Software Engineer",
-      status: "Interview",
-      statusStyle: "bg-indigo-50 text-indigo-600 border-indigo-200",
-      date: "August 28, 2026",
-    },
-    {
-      id: 2,
-      company: "Microsoft",
-      position: "Frontend Developer",
-      status: "Applied",
-      statusStyle: "bg-blue-50 text-blue-600 border-blue-200",
-      date: "August 24, 2026",
-    },
-    {
-      id: 3,
-      company: "Safaricom",
-      position: "Backend Developer",
-      status: "Offer",
-      statusStyle: "bg-emerald-50 text-emerald-600 border-emerald-200",
-      date: "August 20, 2026",
-    },
-    {
-      id: 4,
-      company: "Ethiopian Airlines",
-      position: "Full-Stack Developer",
-      status: "Rejected",
-      statusStyle: "bg-rose-50 text-rose-600 border-rose-200",
-      date: "August 18, 2026",
     },
   ];
 
@@ -129,42 +140,6 @@ export default function Dashboard() {
           })}
         </section>
 
-        <section className="mt-8 bg-white border border-slate-100 rounded-2xl p-6 shadow-sm">
-          <div className="flex items-center justify-between">
-            <div>
-              <h2 className="text-lg font-bold text-slate-900">
-                Application Overview
-              </h2>
-
-              <p className="mt-1 text-sm text-slate-500">
-                A quick look at your application progress.
-              </p>
-            </div>
-          </div>
-
-          <div className="mt-6 grid grid-cols-2 sm:grid-cols-4 gap-4">
-            <div className="bg-slate-50 rounded-xl p-4">
-              <p className="text-xs text-slate-500">Applied</p>
-              <p className="mt-1 text-xl font-bold text-slate-900">6</p>
-            </div>
-
-            <div className="bg-slate-50 rounded-xl p-4">
-              <p className="text-xs text-slate-500">Interview</p>
-              <p className="mt-1 text-xl font-bold text-slate-900">3</p>
-            </div>
-
-            <div className="bg-slate-50 rounded-xl p-4">
-              <p className="text-xs text-slate-500">Offer</p>
-              <p className="mt-1 text-xl font-bold text-slate-900">1</p>
-            </div>
-
-            <div className="bg-slate-50 rounded-xl p-4">
-              <p className="text-xs text-slate-500">Rejected</p>
-              <p className="mt-1 text-xl font-bold text-slate-900">2</p>
-            </div>
-          </div>
-        </section>
-
         <section className="mt-8">
           <div className="flex items-center justify-between mb-4">
             <div>
@@ -188,40 +163,60 @@ export default function Dashboard() {
 
           <div className="space-y-4">
             {recentApplications.map((application) => (
-              <div
+              <Link
                 key={application.id}
-                className="bg-white border border-slate-100 rounded-2xl p-5 shadow-sm hover:shadow-md transition-shadow"
+                href={`/applications/${application.id}`}
+                className="block"
               >
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                  <div className="flex items-center gap-4">
-                    <div className="w-11 h-11 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center">
-                      <BriefcaseBusiness className="w-5 h-5" />
-                    </div>
+                <div className="bg-white border border-slate-100 rounded-2xl p-5 shadow-sm hover:shadow-md transition-shadow">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                    <div className="flex items-center gap-4">
+                      <div className="w-11 h-11 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center">
+                        <BriefcaseBusiness className="w-5 h-5" />
+                      </div>
 
-                    <div>
-                      <h3 className="font-bold text-slate-900">
-                        {application.position}
-                      </h3>
+                      <div>
+                        <h3 className="font-bold text-slate-900">
+                          {application.jobTitle}
+                        </h3>
 
-                      <p className="text-sm text-slate-500">
-                        {application.company}
-                      </p>
+                        <p className="text-sm text-slate-500">
+                          {application.company}
+                        </p>
 
-                      <div className="flex items-center gap-1 mt-1 text-xs text-slate-400">
-                        <Clock3 className="w-3.5 h-3.5" />
-                        {application.date}
+                        <div className="flex items-center gap-1 mt-1 text-xs text-slate-400">
+                          <Clock3 className="w-3.5 h-3.5" />
+
+                          {application.appliedDate
+                            ? new Date(
+                                application.appliedDate,
+                              ).toLocaleDateString()
+                            : "No date"}
+                        </div>
                       </div>
                     </div>
-                  </div>
 
-                  <span
-                    className={`w-fit px-3 py-1.5 rounded-full border text-xs font-semibold ${application.statusStyle}`}
-                  >
-                    {application.status}
-                  </span>
+                    <span className="w-fit px-3 py-1.5 rounded-full border text-xs font-semibold bg-slate-50 text-slate-600 border-slate-200">
+                      {application.status}
+                    </span>
+                  </div>
                 </div>
-              </div>
+              </Link>
             ))}
+
+            {recentApplications.length === 0 && (
+              <div className="bg-white border border-slate-100 rounded-2xl p-8 text-center shadow-sm">
+                <p className="text-sm text-slate-500">No applications yet.</p>
+
+                <Link
+                  href="/applications/new"
+                  className="inline-flex items-center gap-2 mt-4 text-sm font-semibold text-indigo-600"
+                >
+                  <Plus className="w-4 h-4" />
+                  Add your first application
+                </Link>
+              </div>
+            )}
           </div>
         </section>
       </div>
