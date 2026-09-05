@@ -21,7 +21,9 @@ export default function NewApplicationPage() {
   const [location, setLocation] = useState("Demo Location");
   const [appliedDate, setAppliedDate] = useState("2023-01-01");
   const [status, setStatus] = useState("Applied");
-  const [notes, setNotes] = useState("Demo Notes");
+  const [notes, setNotes] = useState(
+    "Demo Notes helps job seekers organize and track their job applications throughout the hiring process.",
+  );
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e: any) => {

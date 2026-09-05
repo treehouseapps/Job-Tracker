@@ -19,6 +19,8 @@ export default function ApplicationsPage() {
   const router = useRouter();
 
   const [applications, setApplications] = useState<Application[]>([]);
+  const [search, setSearch] = useState("");
+  const [statusFilter, setStatusFilter] = useState("All Statuses");
 
   useEffect(() => {
     const getApplications = async () => {
@@ -36,6 +38,17 @@ export default function ApplicationsPage() {
 
     getApplications();
   }, [router]);
+
+  const filteredApplications = applications.filter((application) => {
+    const matchesSearch =
+      application.company.toLowerCase().includes(search.toLowerCase()) ||
+      application.jobTitle.toLowerCase().includes(search.toLowerCase());
+
+    const matchesStatus =
+      statusFilter === "All Statuses" || application.status === statusFilter;
+
+    return matchesSearch && matchesStatus;
+  });
 
   return (
     <main className="min-h-screen bg-slate-50">
@@ -67,11 +80,17 @@ export default function ApplicationsPage() {
               <input
                 type="text"
                 placeholder="Search company or position..."
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
                 className="w-full text-sm outline-none bg-transparent placeholder:text-slate-400"
               />
             </div>
 
-            <select className="px-4 py-2.5 text-sm text-slate-600 bg-slate-50 rounded-xl outline-none border border-slate-100">
+            <select
+              value={statusFilter}
+              onChange={(e) => setStatusFilter(e.target.value)}
+              className="px-4 py-2.5 text-sm text-slate-600 bg-slate-50 rounded-xl outline-none border border-slate-100"
+            >
               <option>All Statuses</option>
               <option>Applied</option>
               <option>Interview</option>
@@ -90,13 +109,13 @@ export default function ApplicationsPage() {
               </h2>
 
               <p className="text-sm text-slate-500 mt-1">
-                {applications.length} applications
+                {filteredApplications.length} applications
               </p>
             </div>
           </div>
 
           <div className="space-y-4">
-            {applications.map((application) => (
+            {filteredApplications.map((application) => (
               <div
                 key={application.id}
                 className="bg-white border border-slate-100 rounded-2xl p-6 shadow-sm hover:shadow-md transition-shadow"
