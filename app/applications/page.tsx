@@ -7,8 +7,6 @@ import {
   CalendarDays,
   BriefcaseBusiness,
   Plus,
-  Pencil,
-  Trash2,
 } from "lucide-react";
 
 import { useEffect, useState } from "react";
